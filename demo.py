@@ -25,7 +25,7 @@ warnings.filterwarnings('ignore')
 def main(yolo):
 
    # Definition of the parameters
-    max_cosine_distance = 0.3
+    max_cosine_distance = 0.1
     nn_budget = None
     nms_max_overlap = 1.0
 
@@ -112,7 +112,7 @@ def main(yolo):
             if len(out_score) != 0:
                 object_score = out_score[0] 
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), box_colour, 2)
-            cv2.putText(frame, object_class + " " + str(int(object_score * 100)) + "%", (int(bbox[0]), int(bbox[1])), 0, 5e-3 * 200, box_colour, 2)
+            cv2.putText(frame, "    " + object_class + " " + str(int(object_score * 100)) + "%", (int(bbox[0]), int(bbox[1])), 0, 5e-3 * 200, box_colour, 2)
 
         cv2.putText(frame, "Occupied: " + str(len(tr_occupied)) + " Vacant: " + str(len(tr_vacant)), (10, 930), 0, 2, (255, 255, 0), 2)
 

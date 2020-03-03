@@ -37,11 +37,11 @@ class Tracker:
 
     """
 
-    def __init__(self, metric, max_iou_distance=0.7, max_age=30, n_init=3):
+    def __init__(self, metric, max_iou_distance=0.7, max_age=10, n_init=1):
         self.metric = metric
         self.max_iou_distance = max_iou_distance
-        self.max_age = max_age
-        self.n_init = n_init
+        self.max_age = 10
+        self.n_init = 1
 
         self.kf = kalman_filter.KalmanFilter()
         self.tracks = []
