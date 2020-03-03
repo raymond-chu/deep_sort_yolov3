@@ -11,8 +11,13 @@ from timeit import time
 from timeit import default_timer as timer  ### to calculate FPS
 
 import numpy as np
+import tensorflow as tf
 from keras import backend as K
 from keras.models import load_model
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.8
+sess = tf.Session(config=config)
+K.set_session(sess)
 from PIL import Image, ImageFont, ImageDraw
 
 from yolo3.model import yolo_eval
@@ -113,7 +118,7 @@ class YOLO(object):
                 y = 0 
             return_boxs.append([x,y,w,h])
 
-        return return_boxs
+        return (return_boxs, out_classes)
 
     def close_session(self):
         self.sess.close()
