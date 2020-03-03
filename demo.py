@@ -36,7 +36,7 @@ def main(yolo):
 
     writeVideo_flag = True 
     
-    video_capture = cv2.VideoCapture(0)
+    video_capture = cv2.VideoCapture('20200130_154806A_Trim_Trim.mp4')
 
     if writeVideo_flag:
     # Define the codec and create VideoWriter object

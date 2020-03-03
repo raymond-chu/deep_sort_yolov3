@@ -22,7 +22,7 @@ class YOLO(object):
     def __init__(self):
         self.model_path = 'model_data/yolo.h5'
         self.anchors_path = 'model_data/yolo_anchors.txt'
-        self.classes_path = 'model_data/coco_classes.txt'
+        self.classes_path = 'model_data/yolo_classes.txt'
         self.score = 0.5
         self.iou = 0.5
         self.class_names = self._get_class()
@@ -97,7 +97,7 @@ class YOLO(object):
         return_boxs = []
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
-            if predicted_class != 'person' :
+            if predicted_class != 'vacant' and predicted_class != 'occupied' :
                 continue
             box = out_boxes[i]
            # score = out_scores[i]  
