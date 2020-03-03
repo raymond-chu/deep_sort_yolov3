@@ -135,6 +135,11 @@ def main(yolo):
         # Press Q to stop!
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+    
+        # Press R to reset counter!
+        if cv2.waitKey(1) & 0xFF == ord('r'):
+            tr_vacant = []
+            tr_occupied = []
 
     video_capture.release()
     cap.stop()
