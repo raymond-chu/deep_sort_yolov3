@@ -87,10 +87,11 @@ def main(yolo):
             if not track.is_confirmed() or track.time_since_update > 1:
                 continue
             if len(out_class) != 0:
-                if out_class[0] == 0 and track.track_id not in tr_vacant:    
-                    tr_vacant.append(track.track_id) 
-                if out_class[0] == 1 and track.track_id not in tr_occupied:
-                    tr_occupied.append(track.track_id)    
+                for item in out_class:
+                    if out_class[item] == 0 and track.track_id not in tr_vacant:    
+                        tr_vacant.append(track.track_id) 
+                    elif out_class[item] == 1 and track.track_id not in tr_occupied:
+                        tr_occupied.append(track.track_id)    
             bbox = track.to_tlbr()
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 2)
             cv2.putText(frame, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
