@@ -27,6 +27,9 @@ def main(yolo):
     nn_budget = None
     nms_max_overlap = 1.0
     
+    # counter 
+    tr = []
+    
    # deep_sort 
     model_filename = 'model_data/mars-small128.pb'
     encoder = gdet.create_box_encoder(model_filename,batch_size=1)
@@ -75,10 +78,14 @@ def main(yolo):
         
         for track in tracker.tracks:
             if not track.is_confirmed() or track.time_since_update > 1:
-                continue 
+                continue
+            if track.track_id not in tr:    
+                tr.append(track.track_id) 
             bbox = track.to_tlbr()
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,255,255), 2)
             cv2.putText(frame, str(track.track_id),(int(bbox[0]), int(bbox[1])),0, 5e-3 * 200, (0,255,0),2)
+
+        cv2.putText(frame, "Occupied: " + str(len(tr)), (10, frame.rows -10), 0, 3, (255,255,0), 2)
 
         for det in detections:
             bbox = det.to_tlbr()
