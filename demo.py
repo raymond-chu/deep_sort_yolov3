@@ -18,6 +18,7 @@ from deep_sort.detection import Detection
 from deep_sort.tracker import Tracker
 from tools import generate_detections as gdet
 from deep_sort.detection import Detection as ddet
+from videocaptureasync import VideoCaptureAsync
 warnings.filterwarnings('ignore')
 
 def main(yolo):
@@ -40,6 +41,8 @@ def main(yolo):
     writeVideo_flag = True 
     
     video_capture = cv2.VideoCapture('20200130_154806A_Trim_Trim.mp4')
+    cap = VideoCaptureAsync()
+    cap.start()
 
     if writeVideo_flag:
     # Define the codec and create VideoWriter object
@@ -52,7 +55,8 @@ def main(yolo):
         
     fps = 0.0
     while True:
-        ret, frame = video_capture.read()  # frame shape 640*480*3
+        # ret, frame = video_capture.read()  # frame shape 640*480*3
+        ret, frame = cap.read()
         if ret != True:
             break
         t1 = time.time()
@@ -91,7 +95,7 @@ def main(yolo):
             bbox = det.to_tlbr()
             cv2.rectangle(frame,(int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])),(255,0,0), 2)
             
-        cv2.imshow('', frame)
+        #cv2.imshow('', frame)
         
         if writeVideo_flag:
             # save a frame
@@ -110,7 +114,8 @@ def main(yolo):
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    video_capture.release()
+    #video_capture.release()
+    cap.stop()
     if writeVideo_flag:
         out.release()
         list_file.close()
