@@ -57,7 +57,6 @@ def main(yolo):
         frame_index = -1
 
     fps = 0.0
-    before = time.time()
     while True:
         # ret, frame = video_capture.read()  # frame shape 640*480*3
         _, frame = cap.read()
@@ -67,7 +66,7 @@ def main(yolo):
 
        # image = Image.fromarray(frame)
         image = Image.fromarray(frame[..., ::-1])  # bgr to rgb
-        boxs, out_class = yolo.detect_image(image)
+        boxs, out_class, out_score = yolo.detect_image(image)
        # print("box_num",len(boxs))
         features = encoder(frame, boxs)
 
@@ -98,18 +97,24 @@ def main(yolo):
                     elif object == 1 and track.track_id not in tr_occupied:
                         tr_occupied.append(track.track_id)
             bbox = track.to_tlbr()
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(
-                bbox[2]), int(bbox[3])), (255, 255, 255), 2)
-            cv2.putText(frame, str(track.track_id), (int(
-                bbox[0]), int(bbox[1])), 0, 5e-3 * 200, (0, 255, 0), 2)
+            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (255, 255, 255), 2)
+            cv2.putText(frame, str(track.track_id), (int(bbox[0]), int(bbox[1])), 0, 5e-3 * 200, (0, 255, 0), 2)
 
         for det in detections:
             bbox = det.to_tlbr()
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(
-                bbox[2]), int(bbox[3])), (255, 0, 0), 2)
+            if len(out_class) != 0:
+                if out_class[0] == 0:
+                    object_class = 'vacant'
+                    box_colour = (128,0,128)
+                elif out_class[0] == 1:
+                    object_class = 'occupied'
+                    box_colour = (0,255,0)
+            if len(out_score) != 0:
+                object_score = out_score[0] 
+            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), box_colour, 2)
+            cv2.putText(frame, object_class + " " + str(int(object_score * 100)) + "%", (int(bbox[0]), int(bbox[1])), 0, 5e-3 * 200, box_colour, 2)
 
-        cv2.putText(frame, "Occupied: " + str(len(tr_occupied)) + " Vacant: " +
-                    str(len(tr_vacant)), (10, 930), 0, 2, (255, 255, 0), 2)
+        cv2.putText(frame, "Occupied: " + str(len(tr_occupied)) + " Vacant: " + str(len(tr_vacant)), (10, 930), 0, 2, (255, 255, 0), 2)
 
         cv2.imshow('', frame)
 
@@ -124,11 +129,7 @@ def main(yolo):
                         boxs[i][0]) + ' '+str(boxs[i][1]) + ' '+str(boxs[i][2]) + ' '+str(boxs[i][3]) + ' ')
             list_file.write('\n')
 
-        after = time.time()
-        curr = 1000000. / (after - before)
-        fps = curr
-        before = after
-        # fps  = ( fps + (1./(time.time()-t1)) ) / 2
+        fps  = ( fps + (1./(time.time()-t1)) ) / 2
         print("fps= %f" % (fps))
 
         # Press Q to stop!

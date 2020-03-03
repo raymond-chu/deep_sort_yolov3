@@ -15,7 +15,7 @@ import tensorflow as tf
 from keras import backend as K
 from keras.models import load_model
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 0.8
+config.gpu_options.per_process_gpu_memory_fraction = 0.9
 sess = tf.Session(config=config)
 K.set_session(sess)
 from PIL import Image, ImageFont, ImageDraw
@@ -105,7 +105,7 @@ class YOLO(object):
             if predicted_class != 'vacant' and predicted_class != 'occupied' :
                 continue
             box = out_boxes[i]
-           # score = out_scores[i]  
+            score = out_scores[i]  
             x = int(box[1])  
             y = int(box[0])  
             w = int(box[3]-box[1])
@@ -118,7 +118,7 @@ class YOLO(object):
                 y = 0 
             return_boxs.append([x,y,w,h])
 
-        return (return_boxs, out_classes)
+        return (return_boxs, out_classes, out_scores)
 
     def close_session(self):
         self.sess.close()
