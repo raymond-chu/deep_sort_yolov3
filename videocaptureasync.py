@@ -6,7 +6,9 @@ import copy
 
 class VideoCaptureAsync:
     def __init__(self, width=1920, height=1080, thermal=True):
-        self.src = '20200130_154806A_Trim_Trim.mp4'
+        # self.src = '20200130_154806A_Trim_Trim.mp4'
+        self.src = '20200116_144023A.mp4'
+        # self.src = 0
         self.cap = cv2.VideoCapture(self.src)
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)

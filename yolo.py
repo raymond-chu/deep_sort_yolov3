@@ -15,7 +15,7 @@ import tensorflow as tf
 from keras import backend as K
 from keras.models import load_model
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 0.9
+#config.gpu_options.per_process_gpu_memory_fraction = 0.9
 sess = tf.Session(config=config)
 K.set_session(sess)
 from PIL import Image, ImageFont, ImageDraw

@@ -44,6 +44,7 @@ def main(yolo):
     writeVideo_flag = True
 
     video_capture = cv2.VideoCapture('20200130_154806A_Trim_Trim.mp4')
+    # video_capture = cv2.VideoCapture(0)
     cap = VideoCaptureAsync()
     cap.start()
 
@@ -100,13 +101,13 @@ def main(yolo):
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (255, 255, 255), 2)
             cv2.putText(frame, str(track.track_id), (int(bbox[0]), int(bbox[1])), 0, 5e-3 * 200, (0, 255, 0), 2)
 
-        for det in detections:
+        for index, det in enumerate(detections):
             bbox = det.to_tlbr()
             if len(out_class) != 0:
-                if out_class[0] == 0:
+                if out_class[index] == 0:
                     object_class = 'vacant'
                     box_colour = (128,0,128)
-                elif out_class[0] == 1:
+                elif out_class[index] == 1:
                     object_class = 'occupied'
                     box_colour = (0,255,0)
             if len(out_score) != 0:
@@ -114,7 +115,7 @@ def main(yolo):
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), box_colour, 2)
             cv2.putText(frame, "    " + object_class + " " + str(int(object_score * 100)) + "%", (int(bbox[0]), int(bbox[1])), 0, 5e-3 * 200, box_colour, 2)
 
-        cv2.putText(frame, "Occupied: " + str(len(tr_occupied)) + " Vacant: " + str(len(tr_vacant)), (10, 930), 0, 2, (255, 255, 0), 2)
+        cv2.putText(frame, "Occupied: " + str(len(tr_occupied)) + " Vacant: " + str(len(tr_vacant)), (10, 1000), 0, 2, (255, 255, 0), 2)
 
         cv2.imshow('', frame)
 
@@ -137,7 +138,7 @@ def main(yolo):
             break
     
         # Press R to reset counter!
-        if cv2.waitKey(1) & 0xFF == ord('r'):
+        elif cv2.waitKey(33) & 0xFF == ord('r'):
             tr_vacant = []
             tr_occupied = []
 
